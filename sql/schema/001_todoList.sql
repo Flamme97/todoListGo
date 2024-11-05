@@ -3,7 +3,7 @@ CREATE TABLE todolist (
   list TEXT NOT NULL,
   created_at TIMESTAMP NOT NULL,
   updated_at TIMESTAMP NOT NULL,
-  complete BOOLEAN
+  complete BOOLEAN NOT NULL
 
 );
 

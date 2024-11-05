@@ -5,7 +5,6 @@
 package database
 
 import (
-	"database/sql"
 	"time"
 )
 
@@ -13,5 +12,5 @@ type Todolist struct {
 	List      string
 	CreatedAt time.Time
 	UpdatedAt time.Time
-	Complete  sql.NullBool
+	Complete  bool
 }

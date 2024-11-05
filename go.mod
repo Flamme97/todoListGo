@@ -1,4 +1,4 @@
-module Documents/todoListgo
+module github.com/Flamme97/todoListGo
 
 go 1.22.2
 

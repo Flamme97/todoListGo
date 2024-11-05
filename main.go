@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/Flamme97/todoListGo/internal/database"
 	"github.com/danielgtaylor/huma/v2"
 	"github.com/danielgtaylor/huma/v2/adapters/humachi"
 	_ "github.com/danielgtaylor/huma/v2/formats/cbor"
@@ -18,6 +19,10 @@ var dinnertime= "make dinner"
 var alltask = []string{learning, runtime, dinnertime}
 var newtask = "go for a walk"
 
+
+type ApiConfig struct {
+	DB *database.Queries
+}
 
 type GreetingOutput struct {
 	Body struct {
@@ -65,8 +70,6 @@ func main() {
 		return resp, nil
 	})
 
-	
-	
 	alltask = addTask(alltask, newtask)
 	printTask(alltask)
 		

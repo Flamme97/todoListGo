@@ -2,7 +2,10 @@ package main
 
 import (
 	"fmt"
+	"net/http"
 	"time"
+
+	"github.com/Flamme97/todoListGo/utils"
 )
 
 type TodoList struct {
@@ -12,18 +15,16 @@ type TodoList struct {
 }
 
 
-func HandlerGetTodoList() *TodoList{
-	fmt.Println("hello world!")
-	example := TodoList{
-		List: "Hello world",
-		CreatedAt: time.Now().UTC(),
-		UpdatedAt: time.Now().UTC(),
+func (apiCfg *ApiConfig) HandlerGetTodoList(w http.ResponseWriter, r *http.Request) {
+	list, err := apiCfg.DB.GetTodoList(r.Context())
+	if err != nil {
+		utils.RespondWithError(w, 400, fmt.Sprint("couldn't get feeds", err))
+		return
 	}
-	return example
+
+	utils.RespondWithJSON(w, 201, utils.DatabaselistsTolists(list))
+
 }
-
-
-
 
 func printTask(taskItems []string){
 	fmt.Println("List of my todos")
@@ -36,9 +37,3 @@ func addTask(taskItems []string, newTask string) []string{
 	updatedlist :=append(taskItems, newTask)
 	return updatedlist
 }
-
-// func showTask(w []string, task []string) {
-// 	for _, task := range alltask {
-// 		fmt.Fprintln(w, task)
-// 	}
-// }

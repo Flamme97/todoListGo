@@ -11,8 +11,8 @@ import (
 )
 
 const createTodo = `-- name: CreateTodo :one
-INSERT INTO todolist(list, created_at, updated_at)
-VALUES($1, $2, $3)
+INSERT INTO todolist(list, created_at, updated_at, complete)
+VALUES($1, $2, $3, $4)
 RETURNING list, created_at, updated_at, complete
 `
 
@@ -20,10 +20,16 @@ type CreateTodoParams struct {
 	List      string
 	CreatedAt time.Time
 	UpdatedAt time.Time
+	Complete  bool
 }
 
 func (q *Queries) CreateTodo(ctx context.Context, arg CreateTodoParams) (Todolist, error) {
-	row := q.db.QueryRowContext(ctx, createTodo, arg.List, arg.CreatedAt, arg.UpdatedAt)
+	row := q.db.QueryRowContext(ctx, createTodo,
+		arg.List,
+		arg.CreatedAt,
+		arg.UpdatedAt,
+		arg.Complete,
+	)
 	var i Todolist
 	err := row.Scan(
 		&i.List,
