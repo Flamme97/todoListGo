@@ -2,13 +2,15 @@ package utils
 
 import (
 	"time"
-
+	"github.com/google/uuid"
 	"github.com/Flamme97/todoListGo/internal/database"
 )
 
 
 type ToDoList struct {
-	List      string  `json:"list"`
+
+	ID        uuid.UUID `json:"id"`
+	List      string  	`json:"list"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
 	Complete 	bool 			`json:"complete"`
@@ -16,6 +18,7 @@ type ToDoList struct {
 
 func DatabaseListToList(dbList database.Todolist) ToDoList {
 	return ToDoList{
+		ID: 				dbList.ID,
 		List: 		 dbList.List,
 		CreatedAt: dbList.CreatedAt,
 		UpdatedAt: dbList.UpdatedAt,
@@ -25,9 +28,9 @@ func DatabaseListToList(dbList database.Todolist) ToDoList {
 
 
 func DatabaselistsTolists(dbToDoLists []database.Todolist) []ToDoList {
-	listOfToDo := []ToDoList{}
+	listOfToDos := []ToDoList{}
 	for _, list := range dbToDoLists {
-		listOfToDo = append(listOfToDo, DatabaseListToList(list))
+		listOfToDos = append(listOfToDos, DatabaseListToList(list))
 	}
-	return listOfToDo
+	return listOfToDos
 }

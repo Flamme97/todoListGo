@@ -8,15 +8,18 @@ package database
 import (
 	"context"
 	"time"
+
+	"github.com/google/uuid"
 )
 
 const createTodo = `-- name: CreateTodo :one
-INSERT INTO todolist(list, created_at, updated_at, complete)
-VALUES($1, $2, $3, $4)
-RETURNING list, created_at, updated_at, complete
+INSERT INTO todolist(id, list, created_at, updated_at, complete)
+VALUES($1, $2, $3, $4, $5)
+RETURNING id, list, created_at, updated_at, complete
 `
 
 type CreateTodoParams struct {
+	ID        uuid.UUID
 	List      string
 	CreatedAt time.Time
 	UpdatedAt time.Time
@@ -25,6 +28,7 @@ type CreateTodoParams struct {
 
 func (q *Queries) CreateTodo(ctx context.Context, arg CreateTodoParams) (Todolist, error) {
 	row := q.db.QueryRowContext(ctx, createTodo,
+		arg.ID,
 		arg.List,
 		arg.CreatedAt,
 		arg.UpdatedAt,
@@ -32,6 +36,7 @@ func (q *Queries) CreateTodo(ctx context.Context, arg CreateTodoParams) (Todolis
 	)
 	var i Todolist
 	err := row.Scan(
+		&i.ID,
 		&i.List,
 		&i.CreatedAt,
 		&i.UpdatedAt,
@@ -41,7 +46,7 @@ func (q *Queries) CreateTodo(ctx context.Context, arg CreateTodoParams) (Todolis
 }
 
 const getTodoList = `-- name: GetTodoList :many
-SELECT list, created_at, updated_at, complete FROM todolist
+SELECT id, list, created_at, updated_at, complete FROM todolist
 `
 
 func (q *Queries) GetTodoList(ctx context.Context) ([]Todolist, error) {
@@ -54,6 +59,7 @@ func (q *Queries) GetTodoList(ctx context.Context) ([]Todolist, error) {
 	for rows.Next() {
 		var i Todolist
 		if err := rows.Scan(
+			&i.ID,
 			&i.List,
 			&i.CreatedAt,
 			&i.UpdatedAt,

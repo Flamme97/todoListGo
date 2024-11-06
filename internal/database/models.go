@@ -6,9 +6,12 @@ package database
 
 import (
 	"time"
+
+	"github.com/google/uuid"
 )
 
 type Todolist struct {
+	ID        uuid.UUID
 	List      string
 	CreatedAt time.Time
 	UpdatedAt time.Time
