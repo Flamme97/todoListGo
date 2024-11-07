@@ -12,6 +12,26 @@ import (
 	"github.com/google/uuid"
 )
 
+const completeToDo = `-- name: CompleteToDo :one
+UPDATE todolist
+SET complete = TRUE
+WHERE id = $1
+RETURNING id, list, created_at, updated_at, complete
+`
+
+func (q *Queries) CompleteToDo(ctx context.Context, id uuid.UUID) (Todolist, error) {
+	row := q.db.QueryRowContext(ctx, completeToDo, id)
+	var i Todolist
+	err := row.Scan(
+		&i.ID,
+		&i.List,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+		&i.Complete,
+	)
+	return i, err
+}
+
 const createTodo = `-- name: CreateTodo :one
 INSERT INTO todolist(id, list, created_at, updated_at, complete)
 VALUES($1, $2, $3, $4, $5)

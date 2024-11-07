@@ -6,3 +6,10 @@ RETURNING *;
 -- name: GetTodoList :many
 SELECT * FROM todolist;
 
+
+
+-- name: CompleteToDo :one
+UPDATE todolist
+SET complete = TRUE
+WHERE id = $1
+RETURNING *;
